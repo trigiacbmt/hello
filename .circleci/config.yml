@@ -29,10 +29,6 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       - checkout
-      - restore_cache:
-            keys:
-                - v1-dependencies-{{ checksum "requirments.txt" }}
-                - v1-requirements-
       - python/install-packages:
           pkg-manager: pip
           # app-dir: ~/project/package-directory/  # If your requirements.txt isn't in the root directory.
@@ -41,13 +37,10 @@ jobs:
           name: install dependencies
           # This assumes pytest is installed via the install-package step above
           command: |
+            pip install --upgrade pip
             python3 -m venv venv
             . venv/bin/activate
             make install
-      - save_cache:
-            paths:
-                - ./venv
-            key: v1-dependencies-{{ checksum "requirments.txt" }}
       - run:
             name: run lint
             command: |
